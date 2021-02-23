@@ -1,0 +1,40 @@
+global:
+  scrape_interval:     5s
+  evaluation_interval: 5s
+
+rule_files:
+  - "/alertmanager/alert.rules"
+
+scrape_configs:
+  # Make Prometheus scrape itself for metrics.
+  - job_name: 'prometheus'
+    static_configs:
+    - targets: ['localhost:9090']
+
+  # Create a job for Docker Swarm containers.
+  - job_name: 'dockerswarm'
+    dockerswarm_sd_configs:
+      - host: unix:///var/run/docker.sock
+        role: tasks
+    relabel_configs:
+      # Get the defined port
+      - source_labels: [__address__, __meta_dockerswarm_service_label_prometheus_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: ${1}:${2}
+        target_label: __address__
+      # Only keep containers that should be running.
+      - source_labels: [__meta_dockerswarm_task_desired_state]
+        regex: running
+        action: keep
+      # Only keep containers that have a `prometheus-job` label.
+      - source_labels: [__meta_dockerswarm_service_label_prometheus_job]
+        regex: .+
+        action: keep
+      # Use the prometheus-job Swarm label as Prometheus job label.
+      - source_labels: [__meta_dockerswarm_service_label_prometheus_job]
+        target_label: job
+alerting:
+  alertmanagers:
+    - static_configs:
+      - targets: ['alertmanager:9093']

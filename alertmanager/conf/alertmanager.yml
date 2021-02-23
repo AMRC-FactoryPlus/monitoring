@@ -1,0 +1,20 @@
+global:
+  resolve_timeout: 1m
+  slack_api_url: 'INSERT_SLACK_WEBHOOK_HERE'
+
+route:
+  receiver: 'slack-notifications'
+
+receivers:
+- name: 'slack-notifications'
+  slack_configs:
+  - channel: '#ADD_CHANNEL_HERE'
+    send_resolved: true
+    text: |-
+      {{ range .Alerts }}
+         *Alert:* {{ .Annotations.summary }} - `{{ .Labels.severity }}`
+        *Description:* {{ .Annotations.description }}
+        *Details:*
+        {{ range .Labels.SortedPairs }} • *{{ .Name }}:* `{{ .Value }}`
+        {{ end }}
+      {{ end }}
