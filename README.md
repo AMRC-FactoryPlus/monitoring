@@ -1,0 +1,2 @@
+# Factory+ Monitoring Stack
+The Monitoring Stack is key to the efficient operation of the Factory+ architecture. It consists of multiple services deployed across nodes that allow for in-depth monitoring of node resources, stack health and system logs, allowing the entire architecture to be monitored from a single location, enabling issues to be quickly resolved. More information on how the monitoring solution works in Factory+, see the Metrics, Logging & Monitoring section of the Factory+ specification.
