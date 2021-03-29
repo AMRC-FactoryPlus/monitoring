@@ -24,7 +24,7 @@ services:
         delay: 5s
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.prometheus.rule=Host(`prometheus.amrc-factoryplus.***REMOVED***`)"
+        - "traefik.http.routers.prometheus.rule=Host(`prometheus.amrc-factoryplus.<domain>`)"
         - "traefik.docker.network=factory-plus"
         - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
         - "traefik.http.routers.prometheus.tls=true"
@@ -46,7 +46,7 @@ services:
     deploy:
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.loki.rule=Host(`loki.amrc-factoryplus.***REMOVED***`)"
+        - "traefik.http.routers.loki.rule=Host(`loki.amrc-factoryplus.<domain>`)"
         - "traefik.docker.network=factory-plus"
         - "traefik.http.services.loki.loadbalancer.server.port=3100"
         - "traefik.http.routers.loki.tls=true"
@@ -66,7 +66,7 @@ services:
         deploy:
           labels:
             - "traefik.enable=true"
-            - "traefik.http.routers.alertmanager.rule=Host(`alerts.amrc-factoryplus.***REMOVED***`)"
+            - "traefik.http.routers.alertmanager.rule=Host(`alerts.amrc-factoryplus.<domain>`)"
             - "traefik.docker.network=factory-plus"
             - "traefik.http.services.alertmanager.loadbalancer.server.port=9093"
             - "traefik.http.routers.alertmanager.tls=true"
@@ -88,7 +88,7 @@ services:
         delay: 5s
       labels:
         - "traefik.enable=true"
-        - "traefik.http.routers.grafana.rule=Host(`monitor.amrc-factoryplus.***REMOVED***`)"
+        - "traefik.http.routers.grafana.rule=Host(`monitor.amrc-factoryplus.<domain>`)"
         - "traefik.docker.network=factory-plus"
         - "traefik.http.services.grafana.loadbalancer.server.port=3000"
         - "traefik.http.routers.grafana.tls=true"
@@ -128,7 +128,7 @@ services:
        - /bin/sh
        - /docker-entrypoint.sh
   cadvisor:
-    image: amrc-factoryplus.***REMOVED***:5000/cadvisor:v0.33.0
+    image: amrc-factoryplus.<domain>:5000/cadvisor:v0.33.0
     networks:
       - factory-plus
     command: -logtostderr -docker_only
@@ -152,7 +152,7 @@ services:
         reservations:
           memory: 128M 
   dockerd-exporter:
-    image: amrc-factoryplus.***REMOVED***:5000/caddy:0.10.10
+    image: amrc-factoryplus.<domain>:5000/caddy:0.10.10
     networks:
       - factory-plus
     environment:
